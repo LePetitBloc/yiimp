@@ -1,0 +1,50 @@
+upstream php_upstream {
+    server php:9000;
+}
+
+server {
+    listen 80;
+    server_name localhost;
+
+    root /var/web;
+    index index.html index.htm index.php;
+
+    # Specify a charset
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # Apply only specific folders and files.
+    location ~ ^/(assets|extensions|images|favicon.ico|manifest.json|browserconfig.xml)/ {
+        include h5bp/directive-only/x-ua-compatible.conf;
+        include h5bp/location/expires.conf;
+        include h5bp/location/protect-system-files.conf;
+    }
+
+    location ~ ^/index\.php$ {
+        # regex to split $uri to $fastcgi_script_name and $fastcgi_path
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+        # Check that the PHP script exists before passing it
+        try_files $fastcgi_script_name =404;
+
+        fastcgi_pass php_upstream;
+        fastcgi_index index.php;
+
+        # include the fastcgi_param setting
+        include fastcgi_params;
+
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+        fastcgi_connect_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_read_timeout 300;
+    }
+
+    location ~ \.php$ {
+        return 404;
+    }
+}

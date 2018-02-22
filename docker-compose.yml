@@ -1,0 +1,43 @@
+version: '2'
+services:
+  db:
+    build:
+      context: ./sql/
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes' # password will be displayed on stdout
+      MYSQL_DATABASE: yiimp
+      MYSQL_USER: stratum
+      MYSQL_PASSWORD: EeG8Chooqu7tua1ev1iejais # /!\ change this
+  php:
+    build:
+      context: ./php/
+    volumes:
+      - ./web/index.php:/var/web/index.php:ro
+      - ./web/yaamp:/var/web/yaamp:ro
+      - ./web/framework:/var/web/framework:ro
+      - ./web/extensions:/var/web/extensions:ro
+      # configuration files
+      - ./web/serverconfig.php:/var/web/serverconfig.php:ro # file must be created
+      - ./web/serverconfig.php:/etc/yiimp/serverconfig.php:ro # file must be created
+      - ./web/keys.php:/etc/yiimp/keys.php:ro # file must be created
+      # must be writable
+      - ./web/yaamp/runtime:/var/web/yaamp/runtime
+      - ./web/assets:/var/web/assets
+    links:
+      - db
+      - memcached
+  memcached:
+    image: memcached:alpine
+  web:
+    build:
+      context: ./web/
+    ports:
+        - "8080:80"
+    volumes:
+        - ./web/index.php:/var/web/index.php:ro
+        - ./web/nginx/sites-available/default:/etc/nginx/sites-available/default:ro
+        - ./web/nginx/fastcgi_params:/etc/nginx/fastcgi_params:ro
+    links:
+        - php
+    restart: always
