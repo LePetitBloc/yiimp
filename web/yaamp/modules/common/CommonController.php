@@ -19,7 +19,7 @@ class CommonController extends CController
 	{
 	//	debuglog("before action ".$action->getId());
 
-		$this->memcache = new YaampMemcache;
+		$this->memcache = new YaampMemcache(YAAMP_MEMCACHE_HOST, YAAMP_MEMCACHE_PORT);
 		$this->t1 = microtime(true);
 
 		if(user()->getState('yaamp_admin')) {

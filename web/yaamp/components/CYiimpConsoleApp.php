@@ -36,7 +36,7 @@ class CYiimpConsoleApp extends CConsoleApplication
 		$this->_controllerPath = $this->getBasePath().DIRECTORY_SEPARATOR.'modules/thread';
 
 		$this->user = new CWebUser; // for user()->getState()
-		$this->memcache = new YaampMemcache;
+		$this->memcache = new YaampMemcache(YAAMP_MEMCACHE_HOST, YAAMP_MEMCACHE_PORT);
 	}
 
 	protected function registerCoreComponents()

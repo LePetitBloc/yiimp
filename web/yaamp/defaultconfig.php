@@ -3,6 +3,9 @@
 // default values if local server config keys are not set (also used to add defines in git)
 // do not change them here... set them in your serverconfig.php
 
+if (!defined('YAAMP_MEMCACHE_HOST')) define('YAAMP_MEMCACHE_HOST', 'localhost');
+if (!defined('YAAMP_MEMCACHE_PORT')) define('YAAMP_MEMCACHE_PORT', 11211);
+
 if (!defined('YAAMP_PRODUCTION')) define('YAAMP_PRODUCTION', false);
 if (!defined('YAAMP_USE_NGINX')) define('YAAMP_USE_NGINX', false);
 

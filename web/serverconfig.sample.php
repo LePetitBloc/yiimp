@@ -2,6 +2,9 @@
 
 ini_set('date.timezone', 'UTC');
 
+define('YAAMP_MEMCACHE_HOST', 'localhost');
+define('YAAMP_MEMCACHE_PORT', 11211);
+
 define('YAAMP_LOGS', '/var/log');
 define('YAAMP_HTDOCS', '/var/web');
 define('YAAMP_BIN', '/var/bin');

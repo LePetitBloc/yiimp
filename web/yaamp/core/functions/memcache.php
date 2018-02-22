@@ -4,10 +4,10 @@ class YaampMemcache
 {
 	public $memcache = null;
 
-	public function __construct()
+	public function __construct($host = "localhost", $port = 11211)
 	{
 		if(!function_exists("memcache_connect")) return;
-		$this->memcache = memcache_connect("127.0.0.1", 11211);
+		$this->memcache = memcache_connect($host, $port);
 	}
 
 	public function get($key)
