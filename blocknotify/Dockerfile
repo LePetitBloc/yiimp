@@ -11,6 +11,8 @@ RUN sed -i "s/tu8tu5/${secret}/" blocknotify.cpp \
 
 FROM alpine:3.7
 
+RUN apk add --no-cache libstdc++-dev libgcc-dev
+
 COPY --from=builder /tmp/blocknotify /usr/local/bin/blocknotify
 
 ENTRYPOINT ["/usr/local/bin/blocknotify"]
