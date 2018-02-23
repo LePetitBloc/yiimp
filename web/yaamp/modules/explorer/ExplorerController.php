@@ -57,7 +57,7 @@ class ExplorerController extends CommonController
 
 		$id = getiparam('id');
 		$coin = getdbo('db_coins', $id);
-		if($coin && $coin->no_explorer) {
+		if($coin) {
 			$link = $coin->link_explorer;
 			//$txid = getparam('txid');
 			//$hash = getparam('hash');

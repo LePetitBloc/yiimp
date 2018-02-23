@@ -8,7 +8,7 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes' # password will be displayed on stdout
       MYSQL_DATABASE: yiimp
       MYSQL_USER: stratum
-      MYSQL_PASSWORD: EeG8Chooqu7tua1ev1iejais # /!\ change this
+      MYSQL_PASSWORD: EeG8Chooqu7tua1ev1iejais # /!\ change this password
   php:
     build:
       context: ./php/
@@ -18,9 +18,9 @@ services:
       - ./web/framework:/var/web/framework:ro
       - ./web/extensions:/var/web/extensions:ro
       # configuration files
-      - ./web/serverconfig.php:/var/web/serverconfig.php:ro # file must be created
-      - ./web/serverconfig.php:/etc/yiimp/serverconfig.php:ro # file must be created
-      - ./web/keys.php:/etc/yiimp/keys.php:ro # file must be created
+      - ./web/serverconfig.php:/var/web/serverconfig.php:ro # /!\ this file must be created first
+      - ./web/serverconfig.php:/etc/yiimp/serverconfig.php:ro # /!\ this file must be created first
+      - ./web/keys.php:/etc/yiimp/keys.php:ro # /!\ this file must be created first
       # must be writable
       - ./web/yaamp/runtime:/var/web/yaamp/runtime
       - ./web/assets:/var/web/assets
@@ -28,7 +28,7 @@ services:
       - db
       - memcached
   memcached:
-    image: memcached:alpine
+      image: memcached:alpine
   web:
     build:
       context: ./web/
@@ -41,3 +41,11 @@ services:
     links:
         - php
     restart: always
+#  stratum:
+#    build:
+#      context: ./stratum/
+#    volumes:
+#      - ./stratum/config:/var/stratum/config:ro
+#    links:
+#      - db
+

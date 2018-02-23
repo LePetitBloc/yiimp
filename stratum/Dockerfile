@@ -1,8 +1,19 @@
 ARG EXCHANGE=false
 
-FROM gcc:4.9 as builder
+FROM alpine:3.7 as builder
 
 ENV EXCHANGE=$EXCHANGE
+
+RUN apk add --no-cache \
+    make \
+    g++ \
+    gmp-dev \
+    rtmpdump-dev \
+    libssh2-dev \
+    openldap-dev \
+    libidn-dev \
+    mariadb-dev \
+    curl-dev
 
 COPY . /tmp
 
@@ -12,21 +23,23 @@ RUN make
 
 WORKDIR /tmp
 
-RUN apt-get update -y && apt-get install -y \
-    libgmp-dev \
-    librtmp-dev \
-    libssh2-1-dev \
-    libldap2-dev \
-    libidn11-dev
-
 # from https://github.com/coolsd/yiimp-1
-RUN if $EXCHANGE; then sed -i 's/CFLAGS += -DNO_EXCHANGE/#CFLAGS += -DNO_EXCHANGE/' Makefile; fi
-RUN make
+RUN if $EXCHANGE; then sed -i 's/CFLAGS += -DNO_EXCHANGE/#CFLAGS += -DNO_EXCHANGE/' Makefile; fi \
+&&  make
 
 FROM alpine:3.7
 
-COPY --from=builder /tmp/stratum /usr/local/bin/stratum
-COPY --from=builder /tmp/config.sample /var/config
+RUN apk add --no-cache \
+        gmp \
+        mariadb-dev \
+        curl-dev \
+&&  rm -rf /var/cache/apk/*
 
-ENTRYPOINT ["/usr/local/bin/stratum"]
-CMD ["/var/config/scrypt.conf"]
+COPY --from=builder /tmp/stratum /usr/local/bin/stratum
+COPY --from=builder /tmp/config.sample /var/stratum/config
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+
+WORKDIR /var/stratum/config
+
+#ENTRYPOINT ["/usr/local/bin/stratum"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

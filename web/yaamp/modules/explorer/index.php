@@ -59,16 +59,16 @@ foreach($list as $coin)
 		$coin->network_hash = controller()->memcache->get("yiimp-nethashrate-{$coin->symbol}");
 	if (!$coin->network_hash) {
 		$remote = new WalletRPC($coin);
-		if ($remote)
-			$info = $remote->getmininginfo();
-		if (isset($info['networkhashps'])) {
-			$coin->network_hash = $info['networkhashps'];
-			controller()->memcache->set("yiimp-nethashrate-{$coin->symbol}", $info['networkhashps'], 60);
-		}
-		else if (isset($info['netmhashps'])) {
-			$coin->network_hash = floatval($info['netmhashps']) * 1e6;
-			controller()->memcache->set("yiimp-nethashrate-{$coin->symbol}", $coin->network_hash, 60);
-		}
+//		if ($remote)
+//			$info = $remote->getmininginfo();
+//		if (isset($info['networkhashps'])) {
+//			$coin->network_hash = $info['networkhashps'];
+//			controller()->memcache->set("yiimp-nethashrate-{$coin->symbol}", $info['networkhashps'], 60);
+//		}
+//		else if (isset($info['netmhashps'])) {
+//			$coin->network_hash = floatval($info['netmhashps']) * 1e6;
+//			controller()->memcache->set("yiimp-nethashrate-{$coin->symbol}", $coin->network_hash, 60);
+//		}
 	}
 
 	$difficulty = Itoa2($coin->difficulty, 3);
