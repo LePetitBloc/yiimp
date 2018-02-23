@@ -1,6 +1,9 @@
 ARG secret="tu8tu5"
 
-FROM gcc:4.9 as builder
+FROM alpine:3.7 as builder
+
+RUN apk add --no-cache make g++ \
+&&  rm -rf /var/cache/apk/*
 
 COPY . /tmp
 
@@ -10,8 +13,6 @@ RUN sed -i "s/tu8tu5/${secret}/" blocknotify.cpp \
 &&  make
 
 FROM alpine:3.7
-
-RUN apk add --no-cache libstdc++-dev libgcc-dev
 
 COPY --from=builder /tmp/blocknotify /usr/local/bin/blocknotify
 
